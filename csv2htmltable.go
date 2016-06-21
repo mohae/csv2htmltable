@@ -6,7 +6,7 @@ import (
 )
 
 var tableTpl = `
-<table class="{{.Class}}">
+<table{{if .Class}} class="{{.Class}}"{{end}}>
 {{range $row := .CSV}}    <tr>
         {{range $row}}<td>{{.}}</td>{{end}}
     </tr>

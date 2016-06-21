@@ -18,7 +18,7 @@ func TestWrite(t *testing.T) {
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table class="">
+<table>
     <tr>
         <td>a</td><td>b</td><td>c</td>
     </tr>
