@@ -6,7 +6,8 @@ import (
 )
 
 var tableTpl = `
-<table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
+<table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>{{if .Caption}}
+    <caption>{{.Caption}}</caption>{{end}}
 {{range $index, $row := .CSV}}{{if eq $index 0}}    <thead>
 {{range $row}}        <th>{{.}}</th>
 {{end}}    </thead>
@@ -18,11 +19,12 @@ var tableTpl = `
 `
 
 type HTMLTable struct {
-	Class string
-	ID    string
-	Title string
-	CSV   [][]string
-	tpl   *template.Template
+	Caption string
+	Class   string
+	ID      string
+	Title   string
+	CSV     [][]string
+	tpl     *template.Template
 }
 
 func New(n string) *HTMLTable {

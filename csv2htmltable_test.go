@@ -7,6 +7,7 @@ import (
 
 func TestWrite(t *testing.T) {
 	tests := []struct {
+		Caption  string
 		Class    string
 		ID       string
 		Title    string
@@ -106,11 +107,42 @@ func TestWrite(t *testing.T) {
 </table>
 `,
 		},
+		{
+			Caption: "This is a test.",
+			Class:   "people",
+			Title:   "People",
+			CSV: [][]string{
+				[]string{"Greeting", "Title", "Name"},
+				[]string{"Hello", "Mr.", "Bob"},
+				[]string{"Bonjour", "M.", "Genvieve"},
+			},
+			Expected: `
+<table class="people">
+    <caption>This is a test.</caption>
+    <thead>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
+    </thead>
+    <tr>
+        <td>Hello</td>
+        <td>Mr.</td>
+        <td>Bob</td>
+    </tr>
+    <tr>
+        <td>Bonjour</td>
+        <td>M.</td>
+        <td>Genvieve</td>
+    </tr>
+</table>
+`,
+		},
 	}
 	var buf bytes.Buffer
 	h := New("test")
 	for i, test := range tests {
 		buf.Reset()
+		h.Caption = test.Caption
 		h.Class = test.Class
 		h.ID = test.ID
 		h.CSV = test.CSV
@@ -120,7 +152,7 @@ func TestWrite(t *testing.T) {
 			continue
 		}
 		if buf.String() != test.Expected {
-			t.Errorf("%d got %s; want %s", i, buf.String(), test.Expected)
+			t.Errorf("%d got %q; want %q", i, buf.String(), test.Expected)
 		}
 	}
 }
