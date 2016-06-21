@@ -10,7 +10,6 @@ func TestWrite(t *testing.T) {
 		Caption  string
 		Class    string
 		ID       string
-		Title    string
 		Footer   string
 		CSV      [][]string
 		Expected string
@@ -82,7 +81,6 @@ func TestWrite(t *testing.T) {
 		},
 		{
 			Class: "people",
-			Title: "People",
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -111,7 +109,6 @@ func TestWrite(t *testing.T) {
 		{
 			Caption: "This is a test.",
 			Class:   "people",
-			Title:   "People",
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -141,7 +138,6 @@ func TestWrite(t *testing.T) {
 		{
 			Caption: "This is a test.",
 			Class:   "people",
-			Title:   "People",
 			Footer:  "This is a footer.",
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
