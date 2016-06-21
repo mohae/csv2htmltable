@@ -8,14 +8,15 @@ import (
 var tableTpl = `
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
 {{range $row := .CSV}}    <tr>
-        {{range $row}}<td>{{.}}</td>{{end}}
-    </tr>
+{{range $row}}        <td>{{.}}</td>
+{{end}}    </tr>
 {{end}}</table>
 `
 
 type HTMLTable struct {
 	Class string
 	ID    string
+	Title string
 	CSV   [][]string
 	tpl   *template.Template
 }

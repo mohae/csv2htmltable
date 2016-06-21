@@ -9,6 +9,7 @@ func TestWrite(t *testing.T) {
 	tests := []struct {
 		Class    string
 		ID       string
+		Title    string
 		CSV      [][]string
 		Expected string
 	}{
@@ -22,10 +23,14 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table>
     <tr>
-        <td>a</td><td>b</td><td>c</td>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
     </tr>
     <tr>
-        <td>1</td><td>2</td><td>3</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
     </tr>
 </table>
 `,
@@ -40,10 +45,14 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table id="test">
     <tr>
-        <td>a</td><td>b</td><td>c</td>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
     </tr>
     <tr>
-        <td>1</td><td>2</td><td>3</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
     </tr>
 </table>
 `,
@@ -57,16 +66,21 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table class="test">
     <tr>
-        <td>a</td><td>b</td><td>c</td>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
     </tr>
     <tr>
-        <td>1</td><td>2</td><td>3</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
     </tr>
 </table>
 `,
 		},
 		{
 			Class: "people",
+			Title: "People",
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -75,13 +89,19 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table class="people">
     <tr>
-        <td>Greeting</td><td>Title</td><td>Name</td>
+        <td>Greeting</td>
+        <td>Title</td>
+        <td>Name</td>
     </tr>
     <tr>
-        <td>Hello</td><td>Mr.</td><td>Bob</td>
+        <td>Hello</td>
+        <td>Mr.</td>
+        <td>Bob</td>
     </tr>
     <tr>
-        <td>Bonjour</td><td>M.</td><td>Genvieve</td>
+        <td>Bonjour</td>
+        <td>M.</td>
+        <td>Genvieve</td>
     </tr>
 </table>
 `,
