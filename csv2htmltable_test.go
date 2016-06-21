@@ -8,17 +8,37 @@ import (
 func TestWrite(t *testing.T) {
 	tests := []struct {
 		Class    string
+		ID       string
 		CSV      [][]string
 		Expected string
 	}{
 		{
 			Class: "",
+			ID:    "",
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
 <table>
+    <tr>
+        <td>a</td><td>b</td><td>c</td>
+    </tr>
+    <tr>
+        <td>1</td><td>2</td><td>3</td>
+    </tr>
+</table>
+`,
+		},
+		{
+			Class: "",
+			ID:    "test",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<table id="test">
     <tr>
         <td>a</td><td>b</td><td>c</td>
     </tr>
@@ -72,6 +92,7 @@ func TestWrite(t *testing.T) {
 	for i, test := range tests {
 		buf.Reset()
 		h.Class = test.Class
+		h.ID = test.ID
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {
