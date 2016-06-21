@@ -23,9 +23,9 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table>
     <tr>
-        <td>a</td>
-        <td>b</td>
-        <td>c</td>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
     </tr>
     <tr>
         <td>1</td>
@@ -45,9 +45,9 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table id="test">
     <tr>
-        <td>a</td>
-        <td>b</td>
-        <td>c</td>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
     </tr>
     <tr>
         <td>1</td>
@@ -66,9 +66,9 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table class="test">
     <tr>
-        <td>a</td>
-        <td>b</td>
-        <td>c</td>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
     </tr>
     <tr>
         <td>1</td>
@@ -89,9 +89,9 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <table class="people">
     <tr>
-        <td>Greeting</td>
-        <td>Title</td>
-        <td>Name</td>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
     </tr>
     <tr>
         <td>Hello</td>

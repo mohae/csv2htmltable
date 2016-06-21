@@ -7,9 +7,13 @@ import (
 
 var tableTpl = `
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
-{{range $row := .CSV}}    <tr>
+{{range $index, $row := .CSV}}{{if eq $index 0}}    <tr>
+{{range $row}}        <th>{{.}}</th>
+{{end}}    </tr>
+{{- else}}    <tr>
 {{range $row}}        <td>{{.}}</td>
 {{end}}    </tr>
+{{- end}}
 {{end}}</table>
 `
 
