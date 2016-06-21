@@ -22,11 +22,11 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <table>
-    <tr>
+    <thead>
         <th>a</th>
         <th>b</th>
         <th>c</th>
-    </tr>
+    </thead>
     <tr>
         <td>1</td>
         <td>2</td>
@@ -44,11 +44,11 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <table id="test">
-    <tr>
+    <thead>
         <th>a</th>
         <th>b</th>
         <th>c</th>
-    </tr>
+    </thead>
     <tr>
         <td>1</td>
         <td>2</td>
@@ -65,11 +65,11 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <table class="test">
-    <tr>
+    <thead>
         <th>a</th>
         <th>b</th>
         <th>c</th>
-    </tr>
+    </thead>
     <tr>
         <td>1</td>
         <td>2</td>
@@ -88,11 +88,11 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <table class="people">
-    <tr>
+    <thead>
         <th>Greeting</th>
         <th>Title</th>
         <th>Name</th>
-    </tr>
+    </thead>
     <tr>
         <td>Hello</td>
         <td>Mr.</td>
