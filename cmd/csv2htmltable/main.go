@@ -10,12 +10,13 @@ import (
 )
 
 var (
-	input   string
-	output  string
-	class   string
-	id      string
-	caption string
-	footer  string
+	input     string
+	output    string
+	class     string
+	rowHeader bool
+	id        string
+	caption   string
+	footer    string
 )
 
 func init() {
@@ -31,6 +32,8 @@ func init() {
 	flag.StringVar(&caption, "p", "", "table caption")
 	flag.StringVar(&footer, "footer", "", "table footer")
 	flag.StringVar(&footer, "f", "", "table footer")
+	flag.BoolVar(&rowHeader, "rowheader", false, "make the first column of each row a header")
+	flag.BoolVar(&rowHeader, "r", false, "make the first column of each row a header")
 }
 
 func main() {
@@ -78,6 +81,7 @@ func realMain() int {
 	if footer != "" {
 		htable.Footer = footer
 	}
+	htable.RowHeader = rowHeader
 
 	r := csv.NewReader(in)
 	htable.CSV, err = r.ReadAll()

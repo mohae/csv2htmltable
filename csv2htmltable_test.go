@@ -11,7 +11,7 @@ func TestWrite(t *testing.T) {
 		Class     string
 		ID        string
 		Footer    string
-		ColHeader bool
+		RowHeader bool
 		CSV       [][]string
 		Expected  string
 	}{
@@ -173,7 +173,7 @@ func TestWrite(t *testing.T) {
 		},
 		{
 			Class:     "greetings",
-			ColHeader: true,
+			RowHeader: true,
 			CSV: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
 				[]string{"English", "Hello", "Mr.", "Bob"},
@@ -211,7 +211,7 @@ func TestWrite(t *testing.T) {
 		h.Class = test.Class
 		h.ID = test.ID
 		h.Footer = test.Footer
-		h.ColHeader = test.ColHeader
+		h.RowHeader = test.RowHeader
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {

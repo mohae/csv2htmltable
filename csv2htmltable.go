@@ -8,7 +8,7 @@ import (
 var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
-{{- $colHeader := .ColHeader}}
+{{- $rowHeader := .RowHeader}}
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
     {{- if .Caption}}
     <caption>{{.Caption}}</caption>{{end}}
@@ -29,7 +29,7 @@ var tableTpl = `
     <tr>
         {{- range $ndx, $field := $record}}
         {{- if eq $ndx 0}}
-            {{- if $colHeader}}
+            {{- if $rowHeader}}
         <th>{{$field}}</th>
             {{- else}}
         <td>{{$field}}</td>
@@ -50,7 +50,7 @@ type HTMLTable struct {
 	ID        string
 	Footer    string
 	Cols      int
-	ColHeader bool // if true the first column is a header
+	RowHeader bool // if true the first column of each row is a header
 	CSV       [][]string
 	tpl       *template.Template
 }
