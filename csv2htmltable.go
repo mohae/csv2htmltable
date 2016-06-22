@@ -8,13 +8,14 @@ import (
 var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
+{{- $colHeader := .ColHeader}}
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
     {{- if .Caption}}
     <caption>{{.Caption}}</caption>{{end}}
-    {{- range $index, $row := .CSV -}}
+    {{- range $index, $record := .CSV -}}
         {{- if eq $index 0}}
     <thead>
-        {{- range $row}}
+        {{- range $record}}
         <th>{{.}}</th>{{end}}
     </thead>
         {{- if $footer}}
@@ -26,8 +27,17 @@ var tableTpl = `
         {{- end}}
         {{- else}}
     <tr>
-        {{- range $row}}
-        <td>{{.}}</td>{{end}}
+        {{- range $ndx, $field := $record}}
+        {{- if eq $ndx 0}}
+            {{- if $colHeader}}
+        <th>{{$field}}</th>
+            {{- else}}
+        <td>{{$field}}</td>
+            {{- end}}
+        {{- else}}
+        <td>{{$field}}</td>
+        {{- end}}
+        {{- end}}
     </tr>
         {{- end}}
     {{- end}}
@@ -35,13 +45,14 @@ var tableTpl = `
 `
 
 type HTMLTable struct {
-	Caption string
-	Class   string
-	ID      string
-	Footer  string
-	Cols    int
-	CSV     [][]string
-	tpl     *template.Template
+	Caption   string
+	Class     string
+	ID        string
+	Footer    string
+	Cols      int
+	ColHeader bool // if true the first column is a header
+	CSV       [][]string
+	tpl       *template.Template
 }
 
 func New(n string) *HTMLTable {
