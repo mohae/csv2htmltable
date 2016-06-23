@@ -30,11 +30,13 @@ func TestWrite(t *testing.T) {
         <th>b</th>
         <th>c</th>
     </thead>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -52,11 +54,13 @@ func TestWrite(t *testing.T) {
         <th>b</th>
         <th>c</th>
     </thead>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -73,11 +77,13 @@ func TestWrite(t *testing.T) {
         <th>b</th>
         <th>c</th>
     </thead>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -97,11 +103,13 @@ func TestWrite(t *testing.T) {
         <th>b</th>
         <th>c</th>
     </thead>
-    <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
 </table>
 </section>
 `,
@@ -120,16 +128,18 @@ func TestWrite(t *testing.T) {
         <th>Title</th>
         <th>Name</th>
     </thead>
-    <tr>
-        <td>Hello</td>
-        <td>Mr.</td>
-        <td>Bob</td>
-    </tr>
-    <tr>
-        <td>Bonjour</td>
-        <td>M.</td>
-        <td>Genvieve</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -149,16 +159,18 @@ func TestWrite(t *testing.T) {
         <th>Title</th>
         <th>Name</th>
     </thead>
-    <tr>
-        <td>Hello</td>
-        <td>Mr.</td>
-        <td>Bob</td>
-    </tr>
-    <tr>
-        <td>Bonjour</td>
-        <td>M.</td>
-        <td>Genvieve</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -184,16 +196,18 @@ func TestWrite(t *testing.T) {
             <td colspan="3">This is a footer.</td>
         </tr>
     </tfoot>
-    <tr>
-        <td>Hello</td>
-        <td>Mr.</td>
-        <td>Bob</td>
-    </tr>
-    <tr>
-        <td>Bonjour</td>
-        <td>M.</td>
-        <td>Genvieve</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},
@@ -213,18 +227,20 @@ func TestWrite(t *testing.T) {
         <th>Title</th>
         <th>Name</th>
     </thead>
-    <tr>
-        <th>English</th>
-        <td>Hello</td>
-        <td>Mr.</td>
-        <td>Bob</td>
-    </tr>
-    <tr>
-        <th>French</th>
-        <td>Bonjour</td>
-        <td>M.</td>
-        <td>Genvieve</td>
-    </tr>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
 </table>
 `,
 		},

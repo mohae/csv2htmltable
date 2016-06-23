@@ -18,32 +18,36 @@ var tableTpl = `
     {{- range $index, $record := .CSV -}}
         {{- if eq $index 0}}
     <thead>
-        {{- range $record}}
+            {{- range $record}}
         <th>{{.}}</th>{{end}}
     </thead>
-        {{- if $footer}}
+            {{- if $footer}}
     <tfoot>
         <tr>
             <td colspan="{{$cols}}">{{$footer}}</td>
         </tr>
     </tfoot>
-        {{- end}}
-        {{- else}}
-    <tr>
-        {{- range $ndx, $field := $record}}
-        {{- if eq $ndx 0}}
-            {{- if $rowHeader}}
-        <th>{{$field}}</th>
-            {{- else}}
-        <td>{{$field}}</td>
             {{- end}}
         {{- else}}
-        <td>{{$field}}</td>
-        {{- end}}
-        {{- end}}
-    </tr>
+				    {{- if eq $index 1}}
+    <tbody>
+				    {{- end}}
+        <tr>
+            {{- range $ndx, $field := $record}}
+                {{- if eq $ndx 0}}
+                    {{- if $rowHeader}}
+            <th>{{$field}}</th>
+                    {{- else}}
+            <td>{{$field}}</td>
+                    {{- end}}
+               {{- else}}
+            <td>{{$field}}</td>
+               {{- end}}
+            {{- end}}
+        </tr>
         {{- end}}
     {{- end}}
+    </tbody>
 </table>
 {{- if .Section}}
 </section>
@@ -57,7 +61,7 @@ type HTMLTable struct {
 	Footer    string
 	Cols      int
 	RowHeader bool // if true the first column of each row is a header
-	Section      bool // Whether the table should be in its own section.
+	Section   bool // Whether the table should be in its own section.
 	CSV       [][]string
 	tpl       *template.Template
 }
