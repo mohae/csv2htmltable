@@ -9,6 +9,9 @@ var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
 {{- $rowHeader := .RowHeader}}
+{{- if .Section}}
+<section>
+{{- end}}
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
     {{- if .Caption}}
     <caption>{{.Caption}}</caption>{{end}}
@@ -42,6 +45,9 @@ var tableTpl = `
         {{- end}}
     {{- end}}
 </table>
+{{- if .Section}}
+</section>
+{{- end}}
 `
 
 type HTMLTable struct {
@@ -51,6 +57,7 @@ type HTMLTable struct {
 	Footer    string
 	Cols      int
 	RowHeader bool // if true the first column of each row is a header
+	Section      bool // Whether the table should be in its own section.
 	CSV       [][]string
 	tpl       *template.Template
 }

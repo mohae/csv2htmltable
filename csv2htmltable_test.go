@@ -12,6 +12,7 @@ func TestWrite(t *testing.T) {
 		ID        string
 		Footer    string
 		RowHeader bool
+		Section   bool
 		CSV       [][]string
 		Expected  string
 	}{
@@ -78,6 +79,31 @@ func TestWrite(t *testing.T) {
         <td>3</td>
     </tr>
 </table>
+`,
+		},
+		{
+			Class:   "",
+			ID:      "",
+			Section: true,
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<section>
+<table>
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+    </tr>
+</table>
+</section>
 `,
 		},
 		{
@@ -212,6 +238,7 @@ func TestWrite(t *testing.T) {
 		h.ID = test.ID
 		h.Footer = test.Footer
 		h.RowHeader = test.RowHeader
+		h.Section = test.Section
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {
