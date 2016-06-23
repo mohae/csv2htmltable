@@ -12,7 +12,7 @@ var tableTpl = `
 {{- if .Section}}
 <section>
 {{- end}}
-<table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}}>
+<table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}} border="{{.Border}}">
     {{- if .Caption}}
     <caption>{{.Caption}}</caption>{{end}}
     {{- range $index, $record := .CSV -}}
@@ -55,22 +55,33 @@ var tableTpl = `
 `
 
 type HTMLTable struct {
-	Caption   string
-	Class     string
-	ID        string
-	Footer    string
-	Cols      int
-	RowHeader bool // if true the first column of each row is a header
-	Section   bool // Whether the table should be in its own section.
-	CSV       [][]string
-	tpl       *template.Template
+	Border      string // Should either be empty or 1.
+	Caption     string
+	Class       string
+	ID          string
+	Footer      string
+	Cols        int
+	RowHeader   bool // if true the first column of each row is a header
+	Section     bool // Whether the table should be in its own section.
+	TableHeader bool // Whether the table has a header section.
+	CSV         [][]string
+	tpl         *template.Template
 }
 
 func New(n string) *HTMLTable {
-	return &HTMLTable{tpl: template.Must(template.New(n).Parse(tableTpl))}
+	return &HTMLTable{TableHeader: true, tpl: template.Must(template.New(n).Parse(tableTpl))}
 }
 
 func (h *HTMLTable) Write(w io.Writer) error {
+
+	// If this is not empty, set it to 1, regardless of what it was set to.  This
+	// is always set to explicitly indicate that this is a non-layout table. The
+	// value must be either "" or "1".
+	// See: https://www.w3.org/TR/html5/tabular-data.html#attr-table-border
+	if h.Border != "" {
+		h.Border = "1"
+	}
+
 	h.Cols = len(h.CSV[0])
 	return h.tpl.Execute(w, h)
 }

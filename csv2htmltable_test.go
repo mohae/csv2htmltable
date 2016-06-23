@@ -24,7 +24,7 @@ func TestWrite(t *testing.T) {
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table>
+<table border="">
     <thead>
         <th>a</th>
         <th>b</th>
@@ -48,7 +48,7 @@ func TestWrite(t *testing.T) {
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table id="test">
+<table id="test" border="">
     <thead>
         <th>a</th>
         <th>b</th>
@@ -71,7 +71,7 @@ func TestWrite(t *testing.T) {
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table class="test">
+<table class="test" border="">
     <thead>
         <th>a</th>
         <th>b</th>
@@ -97,7 +97,7 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <section>
-<table>
+<table border="">
     <thead>
         <th>a</th>
         <th>b</th>
@@ -122,7 +122,7 @@ func TestWrite(t *testing.T) {
 				[]string{"Bonjour", "M.", "Genvieve"},
 			},
 			Expected: `
-<table class="people">
+<table class="people" border="">
     <thead>
         <th>Greeting</th>
         <th>Title</th>
@@ -152,7 +152,7 @@ func TestWrite(t *testing.T) {
 				[]string{"Bonjour", "M.", "Genvieve"},
 			},
 			Expected: `
-<table class="people">
+<table class="people" border="">
     <caption>This is a test.</caption>
     <thead>
         <th>Greeting</th>
@@ -184,7 +184,7 @@ func TestWrite(t *testing.T) {
 				[]string{"Bonjour", "M.", "Genvieve"},
 			},
 			Expected: `
-<table class="people">
+<table class="people" border="">
     <caption>This is a test.</caption>
     <thead>
         <th>Greeting</th>
@@ -220,7 +220,7 @@ func TestWrite(t *testing.T) {
 				[]string{"French", "Bonjour", "M.", "Genvieve"},
 			},
 			Expected: `
-<table class="greetings">
+<table class="greetings" border="">
     <thead>
         <th></th>
         <th>Greeting</th>
