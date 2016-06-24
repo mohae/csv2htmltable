@@ -380,3 +380,52 @@ func TestWrite(t *testing.T) {
 		}
 	}
 }
+
+func TestReset(t *testing.T) {
+	h := New("test")
+	h.HeadingText = "heading"
+	h.HeadingType = 3
+	h.Border = "1"
+	h.Caption = "caption"
+	h.Class = "class"
+	h.ID = "id"
+	h.Footer = "footer"
+	h.Cols = 4
+	h.RowHeader = true
+	h.Section = true
+	h.CSV = [][]string{[]string{"a", "b", "c"}}
+	h.Reset()
+	if h.HeadingText != "" {
+		t.Errorf("got %q, wanted an empty string", h.HeadingText)
+	}
+	if h.HeadingType != 0 {
+		t.Errorf("got %d, wanted 0", h.HeadingType)
+	}
+	if h.Border != "" {
+		t.Errorf("got %q, wanted an empty string", h.Border)
+	}
+	if h.Caption != "" {
+		t.Errorf("got %q, wanted an empty string", h.Caption)
+	}
+	if h.Class != "" {
+		t.Errorf("got %q, wanted an empty string", h.Class)
+	}
+	if h.ID != "" {
+		t.Errorf("got %q, wanted an empty string", h.ID)
+	}
+	if h.Footer != "" {
+		t.Errorf("got %q, wanted an empty string", h.Footer)
+	}
+	if h.Cols != 0 {
+		t.Errorf("got %d, wanted 0", h.Cols)
+	}
+	if h.RowHeader != false {
+		t.Errorf("got %t, wanted false", h.RowHeader)
+	}
+	if h.Section != false {
+		t.Errorf("got %t, wanted false", h.Section)
+	}
+	if len(h.CSV) != 0 {
+		t.Errorf("CSV len was %d, wanted 0", len(h.CSV))
+	}
+}

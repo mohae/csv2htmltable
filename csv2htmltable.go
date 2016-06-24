@@ -6,8 +6,8 @@ import (
 	"io"
 )
 
-// DefaultHeadingTag is the default value for the Heading Element.
-const DefaultHeadingTag = "h4"
+// DefaultHTag is the default value for the Heading Element.
+const DefaultHTag = "h4"
 
 var tableTpl = `
 {{- $footer := .Footer }}
@@ -100,31 +100,8 @@ func (h *HTMLTable) Write(w io.Writer) error {
 	return h.tpl.Execute(w, h)
 }
 
-// HeadingTag returns a valid html heading tag for a given int.  If the int
-// is < 1 || > 6, the DefaultHeadingTag is used.  This ensures the heading
-// tag is always valid.
-func HeadingTag(i int) string {
-	switch i {
-	case 1:
-		return "h1"
-	case 2:
-		return "h2"
-	case 3:
-		return "h3"
-	case 4:
-		return "h4"
-	case 5:
-		return "h5"
-	case 6:
-		return "h6"
-	default:
-		return DefaultHeadingTag
-	}
-}
-
-// HeadingTag returns a valid html heading tag for a given int.  If the int
-// is < 1 || > 6, the DefaultHeadingTag is used.  This ensures the heading
-// tag is always valid.
+// Heading returns the heading element as template.HTML.  If the HeadingType
+// is < 0 || > 6, the DefaultHTag will be used.
 func Heading(i int, s string) template.HTML {
 	var htag string
 	switch i {
@@ -141,7 +118,23 @@ func Heading(i int, s string) template.HTML {
 	case 6:
 		htag = "h6"
 	default:
-		htag = DefaultHeadingTag
+		htag = DefaultHTag
 	}
 	return template.HTML(fmt.Sprintf("<%s>%s</%s>", htag, s, htag))
+}
+
+// Reset resets all of the structs settings to their defaults
+func (h *HTMLTable) Reset() {
+	h.HeadingText = ""
+	h.HeadingType = 0
+	h.Border = ""
+	h.Caption = ""
+	h.Class = ""
+	h.ID = ""
+	h.Footer = ""
+	h.Cols = 0
+	h.RowHeader = false
+	h.Section = false
+	h.TableHeader = true
+	h.CSV = h.CSV[:0]
 }
