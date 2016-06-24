@@ -5,12 +5,45 @@ import (
 	"io"
 )
 
+// DefaultHeadingType is the default value for the Heading Element.
+const DefaultHeadingType = 4
+
 var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
 {{- $rowHeader := .RowHeader}}
+{{- $headingType := .HeadingType}}
 {{- if .Section}}
 <section>
+{{- end}}
+{{- if .HeadingText}}
+    {{- if eq $headingType 1}}
+<h1>
+    {{- else if eq $headingType 2}}
+<h2>
+    {{- else if eq $headingType 3}}
+<h3>
+    {{- else if eq $headingType 4}}
+<h4>
+    {{- else if eq $headingType 5}}
+<h5>
+    {{- else}}
+<h6>
+    {{- end -}}
+{{.HeadingText}}
+    {{- if eq $headingType 1 -}}
+</h1>
+    {{- else if eq $headingType 2 -}}
+</h2>
+    {{- else if eq $headingType 3 -}}
+</h3>
+    {{- else if eq $headingType 4 -}}
+</h4>
+    {{- else if eq $headingType 5 -}}
+</h5>
+    {{- else -}}
+</h6>
+    {{- end}}
 {{- end}}
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}} border="{{.Border}}">
     {{- if .Caption}}
@@ -29,9 +62,9 @@ var tableTpl = `
     </tfoot>
             {{- end}}
         {{- else}}
-				    {{- if eq $index 1}}
+            {{- if eq $index 1}}
     <tbody>
-				    {{- end}}
+            {{- end}}
         <tr>
             {{- range $ndx, $field := $record}}
                 {{- if eq $ndx 0}}
@@ -55,6 +88,9 @@ var tableTpl = `
 `
 
 type HTMLTable struct {
+	HeadingText string
+	// The heading element, valid values are 1-6, invalid value are set to the default.
+	HeadingType int
 	Border      string // Should either be empty or 1.
 	Caption     string
 	Class       string
@@ -73,6 +109,15 @@ func New(n string) *HTMLTable {
 }
 
 func (h *HTMLTable) Write(w io.Writer) error {
+	// see if there is a headingText, If not, ensure the HeadingType is 0; otherwise
+	// make sure HeadingType is valid; set to default for invalid values.
+	if h.HeadingText == "" {
+		h.HeadingType = 0
+	} else {
+		if h.HeadingType == 0 || h.HeadingType > 6 {
+			h.HeadingType = DefaultHeadingType
+		}
+	}
 
 	// If this is not empty, set it to 1, regardless of what it was set to.  This
 	// is always set to explicitly indicate that this is a non-layout table. The
