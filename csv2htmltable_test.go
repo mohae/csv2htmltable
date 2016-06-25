@@ -2,6 +2,7 @@ package csv2htmltable
 
 import (
 	"bytes"
+	"errors"
 	"testing"
 )
 
@@ -427,5 +428,21 @@ func TestReset(t *testing.T) {
 	}
 	if len(h.CSV) != 0 {
 		t.Errorf("CSV len was %d, wanted 0", len(h.CSV))
+	}
+}
+
+func TestIsTableHeaderErr(t *testing.T) {
+	tests := []struct {
+		err      error
+		expected bool
+	}{
+		{err: errors.New("some error"), expected: false},
+		{err: errTableHeader, expected: true},
+	}
+	for i, test := range tests {
+		b := IsTableHeaderErr(test.err)
+		if b != test.expected {
+			t.Errorf("%d: got %t; want %t", i, b, test.expected)
+		}
 	}
 }

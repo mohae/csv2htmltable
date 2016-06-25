@@ -1,6 +1,7 @@
 package csv2htmltable
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"io"
@@ -8,6 +9,8 @@ import (
 
 // DefaultHTag is the default value for the Heading Element.
 const DefaultHTag = "h4"
+
+var errTableHeader = errors.New("no table header information found")
 
 var tableTpl = `
 {{- $footer := .Footer }}
@@ -137,4 +140,9 @@ func (h *HTMLTable) Reset() {
 	h.Section = false
 	h.TableHeader = true
 	h.CSV = h.CSV[:0]
+}
+
+// IsTableHeaderError
+func IsTableHeaderErr(err error) bool {
+	return err.Error() == errTableHeader.Error()
 }
