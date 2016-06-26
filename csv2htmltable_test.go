@@ -403,6 +403,7 @@ func TestReset(t *testing.T) {
 	h.Footer = "footer"
 	h.Cols = 4
 	h.RowHeader = true
+	h.TableHeader = false
 	h.Section = true
 	h.CSV = [][]string{[]string{"a", "b", "c"}}
 	h.Reset()
@@ -432,6 +433,9 @@ func TestReset(t *testing.T) {
 	}
 	if h.RowHeader != false {
 		t.Errorf("got %t, wanted false", h.RowHeader)
+	}
+	if h.TableHeader != true {
+		t.Errorf("got %t, wanted true", h.TableHeader)
 	}
 	if h.Section != false {
 		t.Errorf("got %t, wanted false", h.Section)
