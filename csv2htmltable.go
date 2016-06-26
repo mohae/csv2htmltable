@@ -15,6 +15,7 @@ var errTableHeader = errors.New("no table header information found")
 var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
+{{- $tableHeader := .TableHeader}}
 {{- $rowHeader := .RowHeader}}
 {{- if .Section}}
 <section>
@@ -26,11 +27,13 @@ var tableTpl = `
     {{- if .Caption}}
     <caption>{{.Caption}}</caption>{{end}}
     {{- range $index, $record := .CSV -}}
-        {{- if eq $index 0}}
+        {{- if and ($tableHeader) (eq $index 0)}}
     <thead>
             {{- range $record}}
         <th>{{.}}</th>{{end}}
     </thead>
+        {{- end}}
+        {{- if or (and ($tableHeader) (eq $index 1)) (and (not $tableHeader) (eq $index 0))}}
             {{- if $footer}}
     <tfoot>
         <tr>
@@ -38,10 +41,9 @@ var tableTpl = `
         </tr>
     </tfoot>
             {{- end}}
-        {{- else}}
-            {{- if eq $index 1}}
     <tbody>
-            {{- end}}
+        {{- end}}
+		{{- if or (and ($tableHeader) (gt $index 0)) (not $tableHeader)}}
         <tr>
             {{- range $ndx, $field := $record}}
                 {{- if eq $ndx 0}}

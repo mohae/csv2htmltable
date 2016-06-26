@@ -16,24 +16,26 @@ func TestWrite(t *testing.T) {
 		HeadingType int
 		RowHeader   bool
 		Section     bool
+		TableHeader bool
 		CSV         [][]string
 		Expected    string
 	}{
 		{ // 0
-			Class: "",
-			ID:    "",
+			Class:       "",
+			ID:          "",
+			TableHeader: false,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -44,20 +46,21 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 1
-			Class: "",
-			ID:    "test",
+			Class:       "",
+			ID:          "test",
+			TableHeader: false,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
 <table id="test" border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -68,19 +71,20 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 2
-			Class: "test",
+			Class:       "test",
+			TableHeader: false,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
 <table class="test" border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</tr>
+            <td>b</tr>
+            <td>c</tr>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -91,9 +95,10 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 3
-			Class:   "",
-			ID:      "",
-			Section: true,
+			Class:       "",
+			ID:          "",
+			Section:     true,
+			TableHeader: false,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -101,12 +106,12 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <section>
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -121,6 +126,7 @@ func TestWrite(t *testing.T) {
 			Class:       "",
 			ID:          "",
 			Section:     true,
+			TableHeader: false,
 			HeadingText: "Test Table",
 			HeadingType: 5,
 			CSV: [][]string{
@@ -131,12 +137,12 @@ func TestWrite(t *testing.T) {
 <section>
 <h5>Test Table</h5>
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -150,6 +156,7 @@ func TestWrite(t *testing.T) {
 		{ // 5
 			Class:       "",
 			ID:          "",
+			TableHeader: false,
 			HeadingText: "Test Table",
 			HeadingType: 3,
 			CSV: [][]string{
@@ -159,12 +166,12 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <h3>Test Table</h3>
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -177,6 +184,7 @@ func TestWrite(t *testing.T) {
 		{ // 6
 			Class:       "",
 			ID:          "",
+			TableHeader: false,
 			HeadingText: "Test Table",
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
@@ -185,12 +193,12 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <h4>Test Table</h4>
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -203,6 +211,7 @@ func TestWrite(t *testing.T) {
 		{ // 7
 			Class:       "",
 			ID:          "",
+			TableHeader: false,
 			HeadingText: "Test Table",
 			HeadingType: 10,
 			CSV: [][]string{
@@ -212,12 +221,12 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <h4>Test Table</h4>
 <table border="">
-    <thead>
-        <th>a</th>
-        <th>b</th>
-        <th>c</th>
-    </thead>
     <tbody>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
+        </tr>
         <tr>
             <td>1</td>
             <td>2</td>
@@ -367,6 +376,7 @@ func TestWrite(t *testing.T) {
 		h.ID = test.ID
 		h.Footer = test.Footer
 		h.RowHeader = test.RowHeader
+		h.TableHeader = test.TableHeader
 		h.Section = test.Section
 		h.HeadingText = test.HeadingText
 		h.HeadingType = test.HeadingType
