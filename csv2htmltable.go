@@ -66,20 +66,19 @@ var tableTpl = `
 
 type HTMLTable struct {
 	HeadingText string
-	// The heading element, valid values are 1-6, invalid value are set to the default.
-	HeadingType    int
-	headingElement string
-	Border         string // Should either be empty or 1.
-	Caption        string
-	Class          string
-	ID             string
-	Footer         string
-	Cols           int
-	RowHeader      bool // if true the first column of each row is a header
-	Section        bool // Whether the table should be in its own section.
-	TableHeader    bool // Whether the table has a header section.
-	CSV            [][]string
-	tpl            *template.Template
+	// The heading tag int, valid values are 1-6, invalid value are set to the default.
+	HeadingType int
+	Border      string // Should either be empty or 1.
+	Caption     string
+	Class       string
+	ID          string
+	Footer      string
+	Cols        int
+	RowHeader   bool // if true the first column of each row is a header
+	Section     bool // Whether the table should be in its own section.
+	TableHeader bool // Whether the table has a header section.
+	CSV         [][]string
+	tpl         *template.Template
 }
 
 func New(n string) *HTMLTable {
