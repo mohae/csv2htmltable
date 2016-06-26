@@ -30,7 +30,8 @@ var tableTpl = `
         {{- if and ($tableHeader) (eq $index 0)}}
     <thead>
             {{- range $record}}
-        <th>{{.}}</th>{{end}}
+        <th>{{.}}</th>
+            {{- end}}
     </thead>
         {{- end}}
         {{- if or (and ($tableHeader) (eq $index 1)) (and (not $tableHeader) (eq $index 0))}}
