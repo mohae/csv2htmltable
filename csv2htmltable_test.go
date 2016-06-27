@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"testing"
+
+	json "github.com/mohae/unsafejson"
 )
 
 func TestWrite(t *testing.T) {
@@ -480,6 +482,123 @@ func TestIsTableHeaderErr(t *testing.T) {
 		b := IsTableHeaderErr(test.err)
 		if b != test.expected {
 			t.Errorf("%d: got %t; want %t", i, b, test.expected)
+		}
+	}
+}
+
+func TestHeaderHandling(t *testing.T) {
+	tests := []struct {
+		TableHeader        bool
+		HeaderRowNum       int
+		HeaderRows         [][]string
+		CSV                [][]string
+		ExpectedHeaderRows [][]string
+		ExpectedHTML       string
+		ExpectedErr        string
+	}{
+
+		{TableHeader: true, HeaderRowNum: 1,
+			ExpectedErr: "no table header information found",
+		},
+		{TableHeader: true, HeaderRowNum: 0,
+			ExpectedErr: "no table header information found",
+		},
+		{TableHeader: true, HeaderRowNum: 1,
+			HeaderRows: nil,
+			CSV: [][]string{
+				[]string{"", "Greeting", "Title", "Name"},
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"", "Greeting", "Title", "Name"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th></th>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{TableHeader: true, HeaderRowNum: 2,
+			HeaderRows: nil,
+			CSV: [][]string{
+				[]string{"Language", "Greeting", "Title", "Name"},
+				[]string{"La Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"Language", "Greeting", "Title", "Name"},
+				[]string{"La Langue", "Salutation", "Titre", "Prénom"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th>Language</th>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
+        <tr>La Langue</tr>
+        <tr>Salutation</tr>
+        <tr>Titre</tr>
+        <tr>Prénom</tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+	}
+	var buf bytes.Buffer
+	h := New("test")
+	for i, test := range tests {
+		buf.Reset()
+		h.TableHeader = test.TableHeader
+		h.HeaderRowNum = test.HeaderRowNum
+		h.HeaderRows = test.HeaderRows
+		h.CSV = test.CSV
+		err := h.Write(&buf)
+		if err != nil {
+			t.Errorf("%d: got %q: want nil", i, err)
+			continue
+		}
+		if buf.String() != test.ExpectedHTML {
+			t.Errorf("%d got %q; want %q", i, buf.String(), test.ExpectedHTML)
+			//			t.Errorf("%d got %s; want %s", i, buf.String(), test.Expected)
+		}
+		if json.MarshalToString(h.HeaderRows) != json.MarshalToString(test.ExpectedHeaderRows) {
+			t.Errorf("%d: got %v; want %v", i, h.HeaderRows, test.ExpectedHeaderRows)
 		}
 	}
 }
