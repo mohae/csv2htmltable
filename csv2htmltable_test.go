@@ -85,9 +85,9 @@ func TestWrite(t *testing.T) {
 <table class="test" border="">
     <tbody>
         <tr>
-            <td>a</tr>
-            <td>b</tr>
-            <td>c</tr>
+            <td>a</td>
+            <td>b</td>
+            <td>c</td>
         </tr>
         <tr>
             <td>1</td>
@@ -388,6 +388,7 @@ func TestWrite(t *testing.T) {
 	h := New("test")
 	for i, test := range tests {
 		buf.Reset()
+		h.Reset()
 		h.Caption = test.Caption
 		h.Class = test.Class
 		h.ID = test.ID
