@@ -161,9 +161,9 @@ func (h *HTMLTable) Write(w io.Writer) error {
 			for i := 0; i < h.HeaderRowNum; i++ {
 				h.HeaderRows = append(h.HeaderRows, h.CSV[i])
 			}
-			// remove the header rows from the CSV
-			h.CSV = h.CSV[h.HeaderRowNum:]
 		}
+		// remove the header rows from the CSV
+		h.CSV = h.CSV[h.HeaderRowNum:]
 	}
 	// If the table has headers; but there aren't any header rows: error.
 	if h.TableHeader && len(h.HeaderRows) == 0 {

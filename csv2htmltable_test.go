@@ -513,20 +513,20 @@ func TestHeaderHandling(t *testing.T) {
 		ExpectedHTML       string
 		ExpectedErr        string
 	}{
-		{
+		{ // 0
 			TableHeader: true, HeaderRowNum: 1,
 			ExpectedErr: "no table data found",
 		},
-		{
+		{ // 1
 			TableHeader: true, HeaderRowNum: 0,
 			ExpectedErr: "no table data found",
 		},
-		{
+		{ // 2
 			TableHeader: true, HeaderRowNum: 0,
 			CSV:         [][]string{[]string{"a"}, []string{"b"}},
 			ExpectedErr: "no table header information found",
 		},
-		{
+		{ // 3
 			TableHeader: true, HeaderRowNum: 1, RowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
@@ -562,17 +562,18 @@ func TestHeaderHandling(t *testing.T) {
 </table>
 `,
 		},
-		{TableHeader: true, HeaderRowNum: 2, RowHeader: true,
+		{ // 4
+			TableHeader: true, HeaderRowNum: 2, RowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
 				[]string{"Language", "Greeting", "Title", "Name"},
-				[]string{"La Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 				[]string{"English", "Hello", "Mr.", "Bob"},
 				[]string{"French", "Bonjour", "M.", "Genvieve"},
 			},
 			ExpectedHeaderRows: [][]string{
 				[]string{"Language", "Greeting", "Title", "Name"},
-				[]string{"La Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 			},
 			ExpectedHTML: `
 <table border="">
@@ -581,10 +582,173 @@ func TestHeaderHandling(t *testing.T) {
         <th>Greeting</th>
         <th>Title</th>
         <th>Name</th>
-        <td>La Langue</td>
+        <td>Langue</td>
         <td>Salutation</td>
         <td>Titre</td>
         <td>Prénom</td>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{ // 5
+			TableHeader: true, HeaderRowNum: 0, RowHeader: true,
+			HeaderRows: [][]string{
+				[]string{"", "Greeting", "Title", "Name"},
+			},
+			CSV: [][]string{
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"", "Greeting", "Title", "Name"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th></th>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{ // 6
+			TableHeader: true, HeaderRowNum: 0, RowHeader: true,
+			HeaderRows: [][]string{
+				[]string{"Language", "Greeting", "Title", "Name"},
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+			},
+			CSV: [][]string{
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"Language", "Greeting", "Title", "Name"},
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th>Language</th>
+        <th>Greeting</th>
+        <th>Title</th>
+        <th>Name</th>
+        <td>Langue</td>
+        <td>Salutation</td>
+        <td>Titre</td>
+        <td>Prénom</td>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{ // 7
+			TableHeader: true, HeaderRowNum: 1, RowHeader: true,
+			HeaderRows: [][]string{
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+			},
+			CSV: [][]string{
+				[]string{"", "Greeting", "Title", "Name"},
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th>Langue</th>
+        <th>Salutation</th>
+        <th>Titre</th>
+        <th>Prénom</th>
+    </thead>
+    <tbody>
+        <tr>
+            <th>English</th>
+            <td>Hello</td>
+            <td>Mr.</td>
+            <td>Bob</td>
+        </tr>
+        <tr>
+            <th>French</th>
+            <td>Bonjour</td>
+            <td>M.</td>
+            <td>Genvieve</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{ // 8
+			TableHeader: true, HeaderRowNum: 2, RowHeader: true,
+			HeaderRows: [][]string{
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"Idioma", "Saludo", "Título", "Nombre"},
+			},
+			CSV: [][]string{
+				[]string{"Language", "Greeting", "Title", "Name"},
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"English", "Hello", "Mr.", "Bob"},
+				[]string{"French", "Bonjour", "M.", "Genvieve"},
+			},
+			ExpectedHeaderRows: [][]string{
+				[]string{"Langue", "Salutation", "Titre", "Prénom"},
+				[]string{"Idioma", "Saludo", "Título", "Nombre"},
+			},
+			ExpectedHTML: `
+<table border="">
+    <thead>
+        <th>Langue</th>
+        <th>Salutation</th>
+        <th>Titre</th>
+        <th>Prénom</th>
+        <td>Idioma</td>
+        <td>Saludo</td>
+        <td>Título</td>
+        <td>Nombre</td>
     </thead>
     <tbody>
         <tr>
