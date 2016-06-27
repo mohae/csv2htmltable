@@ -11,6 +11,7 @@ import (
 const DefaultHTag = "h4"
 
 var errTableHeader = errors.New("no table header information found")
+var errNoData = errors.New("no table data found")
 
 var tableTpl = `
 {{- $footer := .Footer }}
@@ -140,6 +141,10 @@ func New(n string) *HTMLTable {
 // executes the HTML table template, writing the output to the received
 // io.Writer.
 func (h *HTMLTable) Write(w io.Writer) error {
+	// Return an error if there's no table data.
+	if len(h.CSV) == 0 {
+		return errNoData
+	}
 	// If this is not empty, set it to 1, regardless of what it was set to.  This
 	// is always set to explicitly indicate that this is a non-layout table. The
 	// value must be either "" or "1".
@@ -209,7 +214,14 @@ func (h *HTMLTable) Reset() {
 	h.CSV = h.CSV[:0]
 }
 
-// IsTableHeaderError
+// IsTableHeaderErr returns whether or not the error returned was a result of
+// an error in the Table Header.
 func IsTableHeaderErr(err error) bool {
 	return err.Error() == errTableHeader.Error()
+}
+
+// IsNoDataErr returns whether or not the error was a result of no table data
+// being present.
+func IsNoDataErr(err error) bool {
+	return err.Error() == errNoData.Error()
 }

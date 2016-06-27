@@ -486,24 +486,48 @@ func TestIsTableHeaderErr(t *testing.T) {
 	}
 }
 
+func TestIsNoDataErr(t *testing.T) {
+	tests := []struct {
+		err      error
+		expected bool
+	}{
+		{err: errors.New("some error"), expected: false},
+		{err: errNoData, expected: true},
+	}
+	for i, test := range tests {
+		b := IsNoDataErr(test.err)
+		if b != test.expected {
+			t.Errorf("%d: got %t; want %t", i, b, test.expected)
+		}
+	}
+}
+
 func TestHeaderHandling(t *testing.T) {
 	tests := []struct {
 		TableHeader        bool
 		HeaderRowNum       int
+		RowHeader          bool
 		HeaderRows         [][]string
 		CSV                [][]string
 		ExpectedHeaderRows [][]string
 		ExpectedHTML       string
 		ExpectedErr        string
 	}{
-
-		{TableHeader: true, HeaderRowNum: 1,
+		{
+			TableHeader: true, HeaderRowNum: 1,
+			ExpectedErr: "no table data found",
+		},
+		{
+			TableHeader: true, HeaderRowNum: 0,
+			ExpectedErr: "no table data found",
+		},
+		{
+			TableHeader: true, HeaderRowNum: 0,
+			CSV:         [][]string{[]string{"a"}, []string{"b"}},
 			ExpectedErr: "no table header information found",
 		},
-		{TableHeader: true, HeaderRowNum: 0,
-			ExpectedErr: "no table header information found",
-		},
-		{TableHeader: true, HeaderRowNum: 1,
+		{
+			TableHeader: true, HeaderRowNum: 1, RowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
@@ -538,7 +562,7 @@ func TestHeaderHandling(t *testing.T) {
 </table>
 `,
 		},
-		{TableHeader: true, HeaderRowNum: 2,
+		{TableHeader: true, HeaderRowNum: 2, RowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
 				[]string{"Language", "Greeting", "Title", "Name"},
@@ -557,10 +581,10 @@ func TestHeaderHandling(t *testing.T) {
         <th>Greeting</th>
         <th>Title</th>
         <th>Name</th>
-        <tr>La Langue</tr>
-        <tr>Salutation</tr>
-        <tr>Titre</tr>
-        <tr>Prénom</tr>
+        <td>La Langue</td>
+        <td>Salutation</td>
+        <td>Titre</td>
+        <td>Prénom</td>
     </thead>
     <tbody>
         <tr>
@@ -587,10 +611,17 @@ func TestHeaderHandling(t *testing.T) {
 		h.TableHeader = test.TableHeader
 		h.HeaderRowNum = test.HeaderRowNum
 		h.HeaderRows = test.HeaderRows
+		h.RowHeader = test.RowHeader
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {
-			t.Errorf("%d: got %q: want nil", i, err)
+			if test.ExpectedErr == "" {
+				t.Errorf("%d: got %q: want nil", i, err)
+			} else {
+				if test.ExpectedErr != err.Error() {
+					t.Errorf("%d: got %q want %q", i, err, test.ExpectedErr)
+				}
+			}
 			continue
 		}
 		if buf.String() != test.ExpectedHTML {
