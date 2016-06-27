@@ -8,22 +8,24 @@ import (
 
 func TestWrite(t *testing.T) {
 	tests := []struct {
-		Caption     string
-		Class       string
-		ID          string
-		Footer      string
-		HeadingText string
-		HeadingType int
-		RowHeader   bool
-		Section     bool
-		TableHeader bool
-		CSV         [][]string
-		Expected    string
+		Caption         string
+		Class           string
+		ID              string
+		Footer          string
+		HeadingText     string
+		HeadingType     int
+		RowHeader       bool
+		Section         bool
+		TableHeader     bool
+		TableHeaderRows int
+		CSV             [][]string
+		Expected        string
 	}{
 		{ // 0
-			Class:       "",
-			ID:          "",
-			TableHeader: false,
+			Class:           "",
+			ID:              "",
+			TableHeader:     false,
+			TableHeaderRows: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -46,9 +48,10 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 1
-			Class:       "",
-			ID:          "test",
-			TableHeader: false,
+			Class:           "",
+			ID:              "test",
+			TableHeader:     false,
+			TableHeaderRows: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -71,8 +74,9 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 2
-			Class:       "test",
-			TableHeader: false,
+			Class:           "test",
+			TableHeader:     false,
+			TableHeaderRows: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -95,10 +99,11 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 3
-			Class:       "",
-			ID:          "",
-			Section:     true,
-			TableHeader: false,
+			Class:           "",
+			ID:              "",
+			Section:         true,
+			TableHeader:     false,
+			TableHeaderRows: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -123,12 +128,13 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 4
-			Class:       "",
-			ID:          "",
-			Section:     true,
-			TableHeader: false,
-			HeadingText: "Test Table",
-			HeadingType: 5,
+			Class:           "",
+			ID:              "",
+			Section:         true,
+			TableHeader:     false,
+			TableHeaderRows: 0,
+			HeadingText:     "Test Table",
+			HeadingType:     5,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -154,11 +160,12 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 5
-			Class:       "",
-			ID:          "",
-			TableHeader: false,
-			HeadingText: "Test Table",
-			HeadingType: 3,
+			Class:           "",
+			ID:              "",
+			TableHeader:     false,
+			TableHeaderRows: 0,
+			HeadingText:     "Test Table",
+			HeadingType:     3,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -182,10 +189,11 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 6
-			Class:       "",
-			ID:          "",
-			TableHeader: false,
-			HeadingText: "Test Table",
+			Class:           "",
+			ID:              "",
+			TableHeader:     false,
+			TableHeaderRows: 0,
+			HeadingText:     "Test Table",
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -209,11 +217,12 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 7
-			Class:       "",
-			ID:          "",
-			TableHeader: false,
-			HeadingText: "Test Table",
-			HeadingType: 10,
+			Class:           "",
+			ID:              "",
+			TableHeader:     false,
+			TableHeaderRows: 0,
+			HeadingText:     "Test Table",
+			HeadingType:     10,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -237,7 +246,9 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 8
-			Class: "people",
+			Class:           "people",
+			TableHeader:     true,
+			TableHeaderRows: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -266,8 +277,10 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 9
-			Caption: "This is a test.",
-			Class:   "people",
+			Caption:         "This is a test.",
+			Class:           "people",
+			TableHeader:     true,
+			TableHeaderRows: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -297,9 +310,11 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 10
-			Caption: "This is a test.",
-			Class:   "people",
-			Footer:  "This is a footer.",
+			Caption:         "This is a test.",
+			Class:           "people",
+			Footer:          "This is a footer.",
+			TableHeader:     true,
+			TableHeaderRows: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
 				[]string{"Hello", "Mr.", "Bob"},
@@ -334,8 +349,10 @@ func TestWrite(t *testing.T) {
 `,
 		},
 		{ // 11
-			Class:     "greetings",
-			RowHeader: true,
+			Class:           "greetings",
+			RowHeader:       true,
+			TableHeader:     true,
+			TableHeaderRows: 1,
 			CSV: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
 				[]string{"English", "Hello", "Mr.", "Bob"},
@@ -377,6 +394,7 @@ func TestWrite(t *testing.T) {
 		h.Footer = test.Footer
 		h.RowHeader = test.RowHeader
 		h.TableHeader = test.TableHeader
+		h.HeaderRowNum = test.TableHeaderRows
 		h.Section = test.Section
 		h.HeadingText = test.HeadingText
 		h.HeadingType = test.HeadingType
@@ -387,7 +405,7 @@ func TestWrite(t *testing.T) {
 			continue
 		}
 		if buf.String() != test.Expected {
-			t.Errorf("%d got %s; want %s", i, buf.String(), test.Expected)
+			t.Errorf("%d got %q; want %q", i, buf.String(), test.Expected)
 		}
 	}
 }
