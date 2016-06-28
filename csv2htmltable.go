@@ -22,7 +22,7 @@ var tableTpl = `
 <section>
 {{- end}}
 {{- if .HeadingText}}
-{{ htag .HeadingType .HeadingText}}
+{{ htag .HeadingTag .HeadingText}}
 {{- end}}
 <table{{if .Class}} class="{{.Class}}"{{end}}{{if .ID}} id="{{.ID}}"{{end}} border="{{.Border}}">
 {{- if .Caption}}
@@ -107,7 +107,7 @@ var tableTpl = `
 type HTMLTable struct {
 	HeadingText string
 	// The heading tag int, valid values are 1-6, invalid value are set to the default.
-	HeadingType  int
+	HeadingTag   int
 	Border       string // Should either be empty or 1.
 	Caption      string
 	Class        string
@@ -199,7 +199,7 @@ func Heading(i int, s string) template.HTML {
 // Reset resets all of the structs settings to their defaults
 func (h *HTMLTable) Reset() {
 	h.HeadingText = ""
-	h.HeadingType = 0
+	h.HeadingTag = 0
 	h.Border = ""
 	h.Caption = ""
 	h.Class = ""

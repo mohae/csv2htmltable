@@ -15,7 +15,7 @@ func TestWrite(t *testing.T) {
 		ID           string
 		Footer       string
 		HeadingText  string
-		HeadingType  int
+		HeadingTag   int
 		RowHeader    bool
 		Section      bool
 		TableHeader  bool
@@ -136,7 +136,7 @@ func TestWrite(t *testing.T) {
 			TableHeader:  false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
-			HeadingType:  5,
+			HeadingTag:   5,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -167,7 +167,7 @@ func TestWrite(t *testing.T) {
 			TableHeader:  false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
-			HeadingType:  3,
+			HeadingTag:   3,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -224,7 +224,7 @@ func TestWrite(t *testing.T) {
 			TableHeader:  false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
-			HeadingType:  10,
+			HeadingTag:   10,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
@@ -400,7 +400,7 @@ func TestWrite(t *testing.T) {
 		h.HeaderRowNum = test.HeaderRowNum
 		h.Section = test.Section
 		h.HeadingText = test.HeadingText
-		h.HeadingType = test.HeadingType
+		h.HeadingTag = test.HeadingTag
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {
@@ -416,7 +416,7 @@ func TestWrite(t *testing.T) {
 func TestReset(t *testing.T) {
 	h := New("test")
 	h.HeadingText = "heading"
-	h.HeadingType = 3
+	h.HeadingTag = 3
 	h.Border = "1"
 	h.Caption = "caption"
 	h.Class = "class"
@@ -432,8 +432,8 @@ func TestReset(t *testing.T) {
 	if h.HeadingText != "" {
 		t.Errorf("got %q, wanted an empty string", h.HeadingText)
 	}
-	if h.HeadingType != 0 {
-		t.Errorf("got %d, wanted 0", h.HeadingType)
+	if h.HeadingTag != 0 {
+		t.Errorf("got %d, wanted 0", h.HeadingTag)
 	}
 	if h.Border != "" {
 		t.Errorf("got %q, wanted an empty string", h.Border)
