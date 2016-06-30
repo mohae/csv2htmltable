@@ -18,8 +18,16 @@ var tableTpl = `
 {{- $cols := .Cols}}
 {{- $tableHeader := .HasHeader}}
 {{- $rowHeader := .HasRowHeader}}
-{{- if .Section}}
+{{- if .Section.Include}}
+    {{- if and .Section.Class .Section.ID}}
+<section class="{{.Section.Class}}" id="{{.Section.ID}}">
+	{{- else if .Section.Class}}
+<section class="{{.Section.Class}}">
+    {{- else if .Section.ID}}
+<section id="{{.Section.ID}}">
+    {{- else}}
 <section>
+    {{- end}}
 {{- end}}
 {{- if .HeadingText}}
 {{ htag .HeadingTag .HeadingText}}
@@ -68,10 +76,18 @@ var tableTpl = `
 {{- end}}
     </tbody>
 </table>
-{{- if .Section}}
+{{- if .Section.Include}}
 </section>
 {{- end}}
 `
+
+// Section holds information about the section, if the table output has a
+// section - which is determined by the Include bool.
+type Section struct {
+	Class   string
+	ID      string
+	Include bool
+}
 
 // HTMLTable contains all of the information and configuration for a table
 // and its data, including the template itself.  The generated table will be
@@ -88,10 +104,8 @@ var tableTpl = `
 // 1 and 6, inclusive.  If the value is invalid, it will be set to 4, the
 // default, which corresponds with <h4>.
 //
-// Optionally, the table can be in its own section by setting Section to true.
-// If the Class and ID fields are non-empty strings, they are applied to the
-// <table> element.  An optional Caption and Footer is supported.  The
-// Footer is assumed to span all of the columns in the table.
+// Optionally, the table can wrapped in a section by setting the
+// Section.Include field to true.
 //
 // The table's header rows output is controlled by the HasHeader field.
 // When false, no table headers will be generated.  If the CSV data has
@@ -115,7 +129,7 @@ type HTMLTable struct {
 	Footer       string
 	Cols         int
 	HasRowHeader bool // if true the first column of each row is a header
-	Section      bool // Whether the table should be in its own section.
+	Section
 	HasHeader    bool // Whether the table has a header section.
 	HeaderRowNum int  // Number of header rows in the CSV field.
 	// Header information, if this is explicitly set and the CSV has header records,
@@ -207,7 +221,9 @@ func (h *HTMLTable) Reset() {
 	h.Footer = ""
 	h.Cols = 0
 	h.HasRowHeader = false
-	h.Section = false
+	h.Section.Include = false
+	h.Section.Class = ""
+	h.Section.ID = ""
 	h.HasHeader = true
 	h.HeaderRowNum = 1
 	h.HeaderRows = h.HeaderRows[:0]

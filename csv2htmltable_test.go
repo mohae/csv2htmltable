@@ -15,9 +15,9 @@ func TestWrite(t *testing.T) {
 		ID           string
 		Footer       string
 		HeadingText  string
+		Section      bool
 		HeadingTag   int
 		HasRowHeader bool
-		Section      bool
 		HasHeader    bool
 		HeaderRowNum int
 		CSV          [][]string
@@ -400,7 +400,7 @@ func TestWrite(t *testing.T) {
 		h.HasRowHeader = test.HasRowHeader
 		h.HasHeader = test.HasHeader
 		h.HeaderRowNum = test.HeaderRowNum
-		h.Section = test.Section
+		h.Section.Include = test.Section
 		h.HeadingText = test.HeadingText
 		h.HeadingTag = test.HeadingTag
 		h.CSV = test.CSV
@@ -428,7 +428,9 @@ func TestReset(t *testing.T) {
 	h.HasRowHeader = true
 	h.HasHeader = false
 	h.HeaderRowNum = 2
-	h.Section = true
+	h.Section.Include = true
+	h.Section.Class = "abc"
+	h.Section.ID = "123"
 	h.CSV = [][]string{[]string{"a", "b", "c"}}
 	h.Reset()
 	if h.HeadingText != "" {
@@ -464,8 +466,14 @@ func TestReset(t *testing.T) {
 	if h.HeaderRowNum != 1 {
 		t.Errorf("got %d, wanted 1", h.HeaderRowNum)
 	}
-	if h.Section != false {
-		t.Errorf("got %t, wanted false", h.Section)
+	if h.Section.Include != false {
+		t.Errorf("got %t, wanted false", h.Section.Include)
+	}
+	if h.Section.Class != "" {
+		t.Errorf("got %q, wanted empty string", h.Section.Class)
+	}
+	if h.Section.ID != "" {
+		t.Errorf("got %q, wanted empty string", h.Section.ID)
 	}
 	if len(h.CSV) != 0 {
 		t.Errorf("CSV len was %d, wanted 0", len(h.CSV))
@@ -796,6 +804,168 @@ func TestHeaderHandling(t *testing.T) {
 		}
 		if json.MarshalToString(h.HeaderRows) != json.MarshalToString(test.ExpectedHeaderRows) {
 			t.Errorf("%d: got %v; want %v", i, h.HeaderRows, test.ExpectedHeaderRows)
+		}
+	}
+}
+
+func TestSection(t *testing.T) {
+	tests := []struct {
+		Section      bool
+		SectionID    string
+		SectionClass string
+		CSV          [][]string
+		Expected     string
+	}{
+		{ // 0
+			Section:      false,
+			SectionID:    "",
+			SectionClass: "",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<table class="test" border="">
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+`,
+		},
+		{ // 1
+			Section:      true,
+			SectionID:    "sid",
+			SectionClass: "sclass",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<section class="sclass" id="sid">
+<table class="test" border="">
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+</section>
+`,
+		},
+		{ // 2
+			Section:      true,
+			SectionID:    "",
+			SectionClass: "",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<section>
+<table class="test" border="">
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+</section>
+`,
+		},
+		{ // 3
+			Section:      true,
+			SectionID:    "",
+			SectionClass: "sclass",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<section class="sclass">
+<table class="test" border="">
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+</section>
+`,
+		},
+		{ // 4
+			Section:      true,
+			SectionID:    "sid",
+			SectionClass: "",
+			CSV: [][]string{
+				[]string{"a", "b", "c"},
+				[]string{"1", "2", "3"},
+			},
+			Expected: `
+<section id="sid">
+<table class="test" border="">
+    <thead>
+        <th>a</th>
+        <th>b</th>
+        <th>c</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+    </tbody>
+</table>
+</section>
+`,
+		},
+	}
+	var buf bytes.Buffer
+	h := New("test")
+	for i, test := range tests {
+		buf.Reset()
+		h.Section.Include = test.Section
+		h.Section.Class = test.SectionClass
+		h.Section.ID = test.SectionID
+		h.CSV = test.CSV
+		err := h.Write(&buf)
+		if err != nil {
+			t.Errorf("%d: got %q: want nil", i, err)
+			continue
+		}
+		if buf.String() != test.Expected {
+			t.Errorf("%d got %q; want %q", i, buf.String(), test.Expected)
+			//			t.Errorf("%d got %s; want %s", i, buf.String(), test.Expected)
 		}
 	}
 }
