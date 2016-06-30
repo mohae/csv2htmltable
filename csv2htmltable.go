@@ -16,8 +16,8 @@ var errNoData = errors.New("no table data found")
 var tableTpl = `
 {{- $footer := .Footer }}
 {{- $cols := .Cols}}
-{{- $tableHeader := .TableHeader}}
-{{- $rowHeader := .RowHeader}}
+{{- $tableHeader := .HasHeader}}
+{{- $rowHeader := .HasRowHeader}}
 {{- if .Section}}
 <section>
 {{- end}}
@@ -93,7 +93,7 @@ var tableTpl = `
 // <table> element.  An optional Caption and Footer is supported.  The
 // Footer is assumed to span all of the columns in the table.
 //
-// The table's header rows output is controlled by the TableHeader field.
+// The table's header rows output is controlled by the HasHeader field.
 // When false, no table headers will be generated.  If the CSV data has
 // record header rows, the HeaderRowNum should be set to the number of
 // header rows it contains so that those rows will be skipped.  If true
@@ -114,9 +114,9 @@ type HTMLTable struct {
 	ID           string
 	Footer       string
 	Cols         int
-	RowHeader    bool // if true the first column of each row is a header
+	HasRowHeader bool // if true the first column of each row is a header
 	Section      bool // Whether the table should be in its own section.
-	TableHeader  bool // Whether the table has a header section.
+	HasHeader    bool // Whether the table has a header section.
 	HeaderRowNum int  // Number of header rows in the CSV field.
 	// Header information, if this is explicitly set and the CSV has header records,
 	// the CSV header records will be ignored.
@@ -134,7 +134,7 @@ func New(n string) *HTMLTable {
 		"htag": Heading,
 	}
 
-	return &HTMLTable{TableHeader: true, HeaderRowNum: 1, tpl: template.Must(template.New(n).Funcs(funcMap).Parse(tableTpl))}
+	return &HTMLTable{Class: n, HasHeader: true, HeaderRowNum: 1, tpl: template.Must(template.New(n).Funcs(funcMap).Parse(tableTpl))}
 }
 
 // Write accepts an io.Writer, validates the current configuration, and
@@ -166,7 +166,7 @@ func (h *HTMLTable) Write(w io.Writer) error {
 		h.CSV = h.CSV[h.HeaderRowNum:]
 	}
 	// If the table has headers; but there aren't any header rows: error.
-	if h.TableHeader && len(h.HeaderRows) == 0 {
+	if h.HasHeader && len(h.HeaderRows) == 0 {
 		return errTableHeader
 	}
 	h.Cols = len(h.CSV[0])
@@ -202,13 +202,13 @@ func (h *HTMLTable) Reset() {
 	h.HeadingTag = 0
 	h.Border = ""
 	h.Caption = ""
-	h.Class = ""
+	h.Class = h.tpl.Name()
 	h.ID = ""
 	h.Footer = ""
 	h.Cols = 0
-	h.RowHeader = false
+	h.HasRowHeader = false
 	h.Section = false
-	h.TableHeader = true
+	h.HasHeader = true
 	h.HeaderRowNum = 1
 	h.HeaderRows = h.HeaderRows[:0]
 	h.CSV = h.CSV[:0]

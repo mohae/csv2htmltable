@@ -16,9 +16,9 @@ func TestWrite(t *testing.T) {
 		Footer       string
 		HeadingText  string
 		HeadingTag   int
-		RowHeader    bool
+		HasRowHeader bool
 		Section      bool
-		TableHeader  bool
+		HasHeader    bool
 		HeaderRowNum int
 		CSV          [][]string
 		Expected     string
@@ -26,14 +26,14 @@ func TestWrite(t *testing.T) {
 		{ // 0
 			Class:        "",
 			ID:           "",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -52,14 +52,14 @@ func TestWrite(t *testing.T) {
 		{ // 1
 			Class:        "",
 			ID:           "test",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
 				[]string{"1", "2", "3"},
 			},
 			Expected: `
-<table id="test" border="">
+<table class="test" id="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -77,7 +77,7 @@ func TestWrite(t *testing.T) {
 		},
 		{ // 2
 			Class:        "test",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
@@ -104,7 +104,7 @@ func TestWrite(t *testing.T) {
 			Class:        "",
 			ID:           "",
 			Section:      true,
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			CSV: [][]string{
 				[]string{"a", "b", "c"},
@@ -112,7 +112,7 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <section>
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -133,7 +133,7 @@ func TestWrite(t *testing.T) {
 			Class:        "",
 			ID:           "",
 			Section:      true,
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
 			HeadingTag:   5,
@@ -144,7 +144,7 @@ func TestWrite(t *testing.T) {
 			Expected: `
 <section>
 <h5>Test Table</h5>
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -164,7 +164,7 @@ func TestWrite(t *testing.T) {
 		{ // 5
 			Class:        "",
 			ID:           "",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
 			HeadingTag:   3,
@@ -174,7 +174,7 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <h3>Test Table</h3>
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -193,7 +193,7 @@ func TestWrite(t *testing.T) {
 		{ // 6
 			Class:        "",
 			ID:           "",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
 			CSV: [][]string{
@@ -202,7 +202,7 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <h4>Test Table</h4>
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -221,7 +221,7 @@ func TestWrite(t *testing.T) {
 		{ // 7
 			Class:        "",
 			ID:           "",
-			TableHeader:  false,
+			HasHeader:    false,
 			HeaderRowNum: 0,
 			HeadingText:  "Test Table",
 			HeadingTag:   10,
@@ -231,7 +231,7 @@ func TestWrite(t *testing.T) {
 			},
 			Expected: `
 <h4>Test Table</h4>
-<table border="">
+<table class="test" border="">
     <tbody>
         <tr>
             <td>a</td>
@@ -249,7 +249,7 @@ func TestWrite(t *testing.T) {
 		},
 		{ // 8
 			Class:        "people",
-			TableHeader:  true,
+			HasHeader:    true,
 			HeaderRowNum: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
@@ -281,7 +281,7 @@ func TestWrite(t *testing.T) {
 		{ // 9
 			Caption:      "This is a test.",
 			Class:        "people",
-			TableHeader:  true,
+			HasHeader:    true,
 			HeaderRowNum: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
@@ -315,7 +315,7 @@ func TestWrite(t *testing.T) {
 			Caption:      "This is a test.",
 			Class:        "people",
 			Footer:       "This is a footer.",
-			TableHeader:  true,
+			HasHeader:    true,
 			HeaderRowNum: 1,
 			CSV: [][]string{
 				[]string{"Greeting", "Title", "Name"},
@@ -352,8 +352,8 @@ func TestWrite(t *testing.T) {
 		},
 		{ // 11
 			Class:        "greetings",
-			RowHeader:    true,
-			TableHeader:  true,
+			HasRowHeader: true,
+			HasHeader:    true,
 			HeaderRowNum: 1,
 			CSV: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
@@ -392,11 +392,13 @@ func TestWrite(t *testing.T) {
 		buf.Reset()
 		h.Reset()
 		h.Caption = test.Caption
-		h.Class = test.Class
+		if test.Class != "" {
+			h.Class = test.Class
+		}
 		h.ID = test.ID
 		h.Footer = test.Footer
-		h.RowHeader = test.RowHeader
-		h.TableHeader = test.TableHeader
+		h.HasRowHeader = test.HasRowHeader
+		h.HasHeader = test.HasHeader
 		h.HeaderRowNum = test.HeaderRowNum
 		h.Section = test.Section
 		h.HeadingText = test.HeadingText
@@ -423,8 +425,8 @@ func TestReset(t *testing.T) {
 	h.ID = "id"
 	h.Footer = "footer"
 	h.Cols = 4
-	h.RowHeader = true
-	h.TableHeader = false
+	h.HasRowHeader = true
+	h.HasHeader = false
 	h.HeaderRowNum = 2
 	h.Section = true
 	h.CSV = [][]string{[]string{"a", "b", "c"}}
@@ -441,8 +443,8 @@ func TestReset(t *testing.T) {
 	if h.Caption != "" {
 		t.Errorf("got %q, wanted an empty string", h.Caption)
 	}
-	if h.Class != "" {
-		t.Errorf("got %q, wanted an empty string", h.Class)
+	if h.Class != "test" {
+		t.Errorf("got %q, wanted \"test\"", h.Class)
 	}
 	if h.ID != "" {
 		t.Errorf("got %q, wanted an empty string", h.ID)
@@ -453,11 +455,11 @@ func TestReset(t *testing.T) {
 	if h.Cols != 0 {
 		t.Errorf("got %d, wanted 0", h.Cols)
 	}
-	if h.RowHeader != false {
-		t.Errorf("got %t, wanted false", h.RowHeader)
+	if h.HasRowHeader != false {
+		t.Errorf("got %t, wanted false", h.HasRowHeader)
 	}
-	if h.TableHeader != true {
-		t.Errorf("got %t, wanted true", h.TableHeader)
+	if h.HasHeader != true {
+		t.Errorf("got %t, wanted true", h.HasHeader)
 	}
 	if h.HeaderRowNum != 1 {
 		t.Errorf("got %d, wanted 1", h.HeaderRowNum)
@@ -504,9 +506,9 @@ func TestIsNoDataErr(t *testing.T) {
 
 func TestHeaderHandling(t *testing.T) {
 	tests := []struct {
-		TableHeader        bool
+		HasHeader          bool
 		HeaderRowNum       int
-		RowHeader          bool
+		HasRowHeader       bool
 		HeaderRows         [][]string
 		CSV                [][]string
 		ExpectedHeaderRows [][]string
@@ -514,20 +516,20 @@ func TestHeaderHandling(t *testing.T) {
 		ExpectedErr        string
 	}{
 		{ // 0
-			TableHeader: true, HeaderRowNum: 1,
+			HasHeader: true, HeaderRowNum: 1,
 			ExpectedErr: "no table data found",
 		},
 		{ // 1
-			TableHeader: true, HeaderRowNum: 0,
+			HasHeader: true, HeaderRowNum: 0,
 			ExpectedErr: "no table data found",
 		},
 		{ // 2
-			TableHeader: true, HeaderRowNum: 0,
+			HasHeader: true, HeaderRowNum: 0,
 			CSV:         [][]string{[]string{"a"}, []string{"b"}},
 			ExpectedErr: "no table header information found",
 		},
 		{ // 3
-			TableHeader: true, HeaderRowNum: 1, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 1, HasRowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
@@ -538,7 +540,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"", "Greeting", "Title", "Name"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th></th>
         <th>Greeting</th>
@@ -563,7 +565,7 @@ func TestHeaderHandling(t *testing.T) {
 `,
 		},
 		{ // 4
-			TableHeader: true, HeaderRowNum: 2, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 2, HasRowHeader: true,
 			HeaderRows: nil,
 			CSV: [][]string{
 				[]string{"Language", "Greeting", "Title", "Name"},
@@ -576,7 +578,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th>Language</th>
         <th>Greeting</th>
@@ -605,7 +607,7 @@ func TestHeaderHandling(t *testing.T) {
 `,
 		},
 		{ // 5
-			TableHeader: true, HeaderRowNum: 0, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 0, HasRowHeader: true,
 			HeaderRows: [][]string{
 				[]string{"", "Greeting", "Title", "Name"},
 			},
@@ -617,7 +619,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"", "Greeting", "Title", "Name"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th></th>
         <th>Greeting</th>
@@ -642,7 +644,7 @@ func TestHeaderHandling(t *testing.T) {
 `,
 		},
 		{ // 6
-			TableHeader: true, HeaderRowNum: 0, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 0, HasRowHeader: true,
 			HeaderRows: [][]string{
 				[]string{"Language", "Greeting", "Title", "Name"},
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
@@ -656,7 +658,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th>Language</th>
         <th>Greeting</th>
@@ -685,7 +687,7 @@ func TestHeaderHandling(t *testing.T) {
 `,
 		},
 		{ // 7
-			TableHeader: true, HeaderRowNum: 1, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 1, HasRowHeader: true,
 			HeaderRows: [][]string{
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 			},
@@ -698,7 +700,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th>Langue</th>
         <th>Salutation</th>
@@ -723,7 +725,7 @@ func TestHeaderHandling(t *testing.T) {
 `,
 		},
 		{ // 8
-			TableHeader: true, HeaderRowNum: 2, RowHeader: true,
+			HasHeader: true, HeaderRowNum: 2, HasRowHeader: true,
 			HeaderRows: [][]string{
 				[]string{"Langue", "Salutation", "Titre", "Prénom"},
 				[]string{"Idioma", "Saludo", "Título", "Nombre"},
@@ -739,7 +741,7 @@ func TestHeaderHandling(t *testing.T) {
 				[]string{"Idioma", "Saludo", "Título", "Nombre"},
 			},
 			ExpectedHTML: `
-<table border="">
+<table class="test" border="">
     <thead>
         <th>Langue</th>
         <th>Salutation</th>
@@ -772,10 +774,10 @@ func TestHeaderHandling(t *testing.T) {
 	h := New("test")
 	for i, test := range tests {
 		buf.Reset()
-		h.TableHeader = test.TableHeader
+		h.HasHeader = test.HasHeader
 		h.HeaderRowNum = test.HeaderRowNum
 		h.HeaderRows = test.HeaderRows
-		h.RowHeader = test.RowHeader
+		h.HasRowHeader = test.HasRowHeader
 		h.CSV = test.CSV
 		err := h.Write(&buf)
 		if err != nil {
