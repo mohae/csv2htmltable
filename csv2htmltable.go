@@ -14,10 +14,6 @@ var errTableHeader = errors.New("no table header information found")
 var errNoData = errors.New("no table data found")
 
 var tableTpl = `
-{{- $footer := .Footer }}
-{{- $cols := .Cols}}
-{{- $tableHeader := .HasHeader}}
-{{- $rowHeader := .HasRowHeader}}
 {{- if .Section.Include}}
     {{- if and .Section.Class .Section.ID}}
 <section class="{{.Section.Class}}" id="{{.Section.ID}}">
@@ -36,7 +32,7 @@ var tableTpl = `
 {{- if .Caption}}
     <caption>{{.Caption}}</caption>
 {{- end}}
-{{- if $tableHeader }}
+{{- if $.HasHeader }}
     <thead>
     {{- range $i, $row := .HeaderRows}}
         {{- range $fld := $row}}
@@ -49,10 +45,10 @@ var tableTpl = `
     {{- end}}
     </thead>
 {{- end}}
-{{- if $footer}}
+{{- if $.Footer}}
     <tfoot>
         <tr>
-            <td colspan="{{$cols}}">{{$footer}}</td>
+            <td colspan="{{$.Cols}}">{{$.Footer}}</td>
         </tr>
     </tfoot>
 {{- end}}
@@ -63,7 +59,7 @@ var tableTpl = `
         <tr>
     {{- range $ndx, $field := $record}}
         {{- if eq $ndx 0}}
-            {{- if $rowHeader}}
+            {{- if $.HasRowHeader}}
             <th>{{$field}}</th>
             {{- else}}
             <td>{{$field}}</td>
