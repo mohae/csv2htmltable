@@ -101,13 +101,13 @@ func realMain() int {
 	if footer != "" {
 		htable.Footer = footer
 	}
-	htable.RowHeader = rowHeader
-	htable.Section = section
+	htable.HasRowHeader = rowHeader
+	htable.Section.Include = section
 	if headingText != "" {
 		htable.HeadingText = headingText
 	}
 	htable.HeadingTag = headingTag
-	htable.TableHeader = tableHeader
+	htable.HasHeader = tableHeader
 	htable.HeaderRowNum = headerRowNum
 	r := csv.NewReader(in)
 	htable.CSV, err = r.ReadAll()
